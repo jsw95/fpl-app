@@ -7,6 +7,8 @@ import (
 )
 
 func main() {
+	//logger = log.With(logger, "ts", log.DefaultTimestampUTC, "loc", log.DefaultCaller)
+
 	a := App{}
 
 	err := godotenv.Load("fpl.env")
