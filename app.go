@@ -33,7 +33,7 @@ func (a *App) Initialize(user, dbname, password string) {
 func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/", HomePageHandler)
 	a.Router.HandleFunc("/player_name/{IndexName}", a.getPlayer)
-	//a.Router.HandleFunc("/player_name/", a.getPlayer)
+	a.Router.HandleFunc("/show_players", a.ShowPlayers)
 }
 
 func (a *App) Run(addr string) {

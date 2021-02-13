@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"text/template"
 )
 
 type player struct {
@@ -15,9 +16,52 @@ type player struct {
 
 }
 
+type ShowPlayerPage struct {
+	PageTitle string
+	Players []player
+}
+
 func (p *player) getPlayer(db *sql.DB) error {
 	return db.QueryRow("SELECT * from public.players WHERE index_name=$1",
 		p.IndexName).Scan(&p.Id, &p.FirstName, &p.LastName, &p.IndexName)
+}
+
+func  (a *App) ShowPlayers(w http.ResponseWriter, r *http.Request){
+
+	data := ShowPlayerPage{
+		PageTitle: "Here are some players",
+		Players: []player{},
+	}
+	indexName := r.FormValue("player_name")
+
+	if indexName != "" {
+		p := player{IndexName: indexName}
+		err := p.getPlayer(a.DB)
+		if err != nil {
+			switch err {
+			case sql.ErrNoRows:
+				respondWithError(w, http.StatusNotFound, "Player not found")
+			default:
+				respondWithError(w, http.StatusInternalServerError, err.Error())
+			}
+			return
+		}
+
+		data.Players = append(data.Players, p)
+	}
+
+
+	tmpl, err := template.ParseFiles("templates/showPlayers.html")
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	_ = tmpl.Execute(w, data)
+
+
+
+
 }
 
 func HomePageHandler(w http.ResponseWriter, r *http.Request) {
@@ -48,3 +92,5 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 
 	respondWithJSON(w, http.StatusOK, p)
 }
+
+

@@ -1,0 +1,15 @@
+<h1>{{.PageTitle}}</h1>
+
+<form method="GET">
+    <label>Player Name:</label><br>
+    <input type="text" name="player_name">
+    <input type="submit">
+</form>
+<ul>
+    {{range .Players}}
+    <li>{{.}}</li>
+    <li>{{.FirstName}}</li>
+    <li>{{.LastName}}</li>
+    <li>{{.IndexName}}</li>
+    {{end}}
+</ul>
