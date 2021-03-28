@@ -14,7 +14,7 @@ func main() {
 	err := godotenv.Load("fpl.env")
 
 	if err != nil {
-		log.Fatalf("error")
+		log.Fatal(err)
 	}
 	a.Initialize(
 		os.Getenv("user"),
@@ -22,6 +22,7 @@ func main() {
 		os.Getenv("user"),
 		)
 
-	a.Run(":8080")
-
+	port := "8080"
+	log.Println("Running on http://localhost:" + port)
+	a.Run(":" + port)
 }

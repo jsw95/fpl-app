@@ -2,3 +2,5 @@ fpl.env
 .idea
 .idea/
 fplapp
+.idea/
+*.idea/

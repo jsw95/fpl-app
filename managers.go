@@ -1,48 +1,48 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
 	"encoding/json"
-	"time"
+	// "fmt"
 	"io/ioutil"
 	"log"
-	// "sync"
+	"net/http"
 	"strconv"
+	"sync"
+	"time"
+
 )
 
 type manager struct {
-    Name string `json:"name"`
+	Name string `json:"name"`
 }
 
-func main() {
-	fmt.Println("h")
+func addManagersToDb() {
 
-	// urls := []string{
-	// 	"https://fantasy.premierleague.com/api/entry/1/",
-	// 	"https://fantasy.premierleague.com/api/entry/2/",
-	// 	"https://fantasy.premierleague.com/api/entry/3/",
-	// }
 	spaceClient := http.Client{
 		Timeout: time.Second * 5, // Timeout after 2 seconds
 	}
 	baseUrl := "https://fantasy.premierleague.com/api/entry/"
 
-	// httpClient = &http.Client(Timeout: 10 * time.Second)
-	for i := 1; i < 1000; i++ {
-		url := baseUrl + strconv.Itoa(i) + "/"
-		// name := getManagerName(url)
-		// fmt.Println(name)
-		go getManagerName(url, spaceClient)
+	var wg sync.WaitGroup
+	batchSize := 750
+	numBatches := 10
+	for batch := 0; batch < numBatches; batch++ {
 
+		for i := 1; i < batchSize; i++ {
+			wg.Add(1)
+			userId := i + batch * batchSize
+			url := baseUrl + strconv.Itoa(userId) + "/"
+			go getManagerName(url, spaceClient, &wg)
 
+		}
+		wg.Wait()
 	}
-	time.Sleep(5 * time.Second)
+	// time.Sleep(5 * time.Second)
 }
 
-func getManagerName(url string, spaceClient http.Client) string {
-
-	req, err := http.NewRequest(http.MethodGet, url, nil) 
+func getManagerName(url string, spaceClient http.Client, wg *sync.WaitGroup) string {
+	defer wg.Done()
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,11 +53,11 @@ func getManagerName(url string, spaceClient http.Client) string {
 	if getErr != nil {
 		log.Fatal(getErr)
 	}
-	
+
 	if res.Body != nil {
 		defer res.Body.Close()
 	}
-	
+
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
 		log.Fatal(readErr)
@@ -68,7 +68,6 @@ func getManagerName(url string, spaceClient http.Client) string {
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
 	}
-	fmt.Println(manager1.Name)
-
+	
 	return manager1.Name
 }

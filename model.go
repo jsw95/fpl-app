@@ -19,12 +19,26 @@ type player struct {
 type ShowPlayerPage struct {
 	PageTitle string
 	Players []player
+	TeamPlayers []player
+}
+type LoginPage struct {
+	PageTitle string
 }
 
 func (p *player) getPlayer(db *sql.DB) error {
 	return db.QueryRow("SELECT * from public.players WHERE index_name=$1",
 		p.IndexName).Scan(&p.Id, &p.FirstName, &p.LastName, &p.IndexName)
 }
+
+
+// func getPlayersFromTeamID(teamId string) []player {
+
+// 	baseUrl := "https://fantasy.premierleague.com/api/entry/"
+// 	url := baseUrl + strconv.Itoa(teamId) + "/"
+
+
+
+// }
 
 func  (a *App) ShowPlayers(w http.ResponseWriter, r *http.Request){
 
@@ -69,6 +83,29 @@ func HomePageHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln("Fatal!")
 	}
+}
+
+func (a *App) AuthHandler(w http.ResponseWriter, r *http.Request) {
+	data := LoginPage{
+		PageTitle: "Login Here",
+	}
+	tmpl, err := template.ParseFiles("templates/auth.html")
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+	getSessionCookies(username, password)
+
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+
+
 }
 
 func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {

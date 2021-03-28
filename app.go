@@ -34,10 +34,11 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/", HomePageHandler)
 	a.Router.HandleFunc("/player_name/{IndexName}", a.getPlayer)
 	a.Router.HandleFunc("/show_players", a.ShowPlayers)
+	a.Router.HandleFunc("/login", a.AuthHandler)
 }
 
 func (a *App) Run(addr string) {
-	log.Fatal(http.ListenAndServe(":8010", a.Router))
+	log.Fatal(http.ListenAndServe(addr, a.Router))
 }
 
 
