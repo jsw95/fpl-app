@@ -43,6 +43,7 @@ func (a *App) initializeRoutes() {
 }
 
 func (a *App) Run(addr string) {
+	log.Println("Trying to connect on " + addr)
 	log.Fatal(http.ListenAndServe(addr, a.Router))
 }
 
