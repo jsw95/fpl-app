@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
 )
@@ -9,14 +9,14 @@ import (
 func main() {
 	//logger = log.With(logger, "ts", log.DefaultTimestampUTC, "loc", log.DefaultCaller)
 
-	a := App{}
+	app := App{}
 
-	// err := godotenv.Load("fpl.env")
+	err := godotenv.Load("fpl.env")
 
 	// if err != nil {
 		// log.Fatal(err)
 	// }
-	a.Initialize(
+	app.Initialize(
 		os.Getenv("user"),
 		os.Getenv("database"),
 		os.Getenv("user"),
@@ -27,5 +27,5 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println("Running on " + addr)
-	a.Run(addr)
+	app.Run(addr)
 }

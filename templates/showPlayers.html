@@ -1,18 +1,64 @@
 <h1>{{.PageTitle}}</h1>
+<html>
+<head>
+<style>
+table {
+  width:100%;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+  text-align: left;
+}
+tr:nth-child(even) {
+  background-color: #eee;
+}
+tr:nth-child(odd) {
+ background-color: #fff;
+}
+th {
+  background-color: black;
+  color: white;
+}
+</style>
+</head>
+<body>
 
+
+
+
+</body>
+</html>
 <form method="GET">
     <label>Player Name:</label><br>
     <input type="text" name="player_name">
     <input type="submit">
-    <label>Team ID:</label><br>
-    <input type="text" name="team_id">
-    <input type="submit">
+    <!-- <label>Team ID:</label><br> -->
+    <!-- <input type="text" name="team_id"> -->
+    <!-- <input type="submit"> -->
 </form>
 <ul>
-    {{range .Players}}
-    <li>{{.}}</li>
-    <li>{{.FirstName}}</li>
-    <li>{{.LastName}}</li>
-    <li>{{.IndexName}}</li>
-    {{end}}
+    
+    <table>
+        <tr>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>TeamName</th>
+            <th>Position</th>
+            <th>Cost</th> 
+        </tr>
+        {{range .Players}}
+        <tr>
+        <td>{{.FirstName}}</td>
+        <td>{{.LastName}}</td>
+        <td>{{.TeamName}}</td>
+        <td>{{.Position}}</td>
+        <td>{{.Cost}}</td>
+        </tr>
+        {{end}}
+        </tr>
+    </table>
 </ul>

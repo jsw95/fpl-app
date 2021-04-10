@@ -12,8 +12,10 @@ type player struct {
 	Id        int32  `json:"id"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
+	TeamName string `json:"teamName"`
+	Position string `json:"position"`
+	Cost int `json:"cost"`
 	IndexName string `json:"indexName"`
-
 }
 
 type ShowPlayerPage struct {
@@ -26,8 +28,12 @@ type LoginPage struct {
 }
 
 func (p *player) getPlayer(db *sql.DB) error {
-	return db.QueryRow("SELECT * from public.players WHERE index_name=$1",
-		p.IndexName).Scan(&p.Id, &p.FirstName, &p.LastName, &p.IndexName)
+	err := db.QueryRow("SELECT * from public.players WHERE last_name=$1",
+		p.LastName).Scan(&p.Id, &p.LastName, &p.FirstName, &p.IndexName, &p.TeamName, &p.Position, &p.Cost)
+	// if err != nil {
+		// log.Println(err)
+	// }
+	return err
 }
 
 
@@ -49,7 +55,7 @@ func  (a *App) ShowPlayers(w http.ResponseWriter, r *http.Request){
 	indexName := r.FormValue("player_name")
 
 	if indexName != "" {
-		p := player{IndexName: indexName}
+		p := player{LastName: indexName}
 		err := p.getPlayer(a.DB)
 		if err != nil {
 			switch err {
