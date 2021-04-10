@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"log"
+	"os"
 	"net/http"
 )
 
@@ -16,8 +17,12 @@ type App struct {
 
 
 func (a *App) Initialize(user, dbname, password string) {
-	connectionString :=
-		fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", user, password, dbname)
+	var connectionString string
+	if os.Getenv("DATABASE_URL") != "" {
+		connectionString = os.Getenv("DATABASE_URL")
+	} else {
+		connectionString = fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", user, password, dbname)
+	}
 	var err error
 	a.DB, err = sql.Open("postgres", connectionString)
 	if err != nil {

@@ -11,11 +11,11 @@ func main() {
 
 	a := App{}
 
-	err := godotenv.Load("fpl.env")
+	// err := godotenv.Load("fpl.env")
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	// if err != nil {
+		// log.Fatal(err)
+	// }
 	a.Initialize(
 		os.Getenv("user"),
 		os.Getenv("database"),
