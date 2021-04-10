@@ -8,7 +8,7 @@ import (
 
 func main() {
 	//logger = log.With(logger, "ts", log.DefaultTimestampUTC, "loc", log.DefaultCaller)
-	
+
 	a := App{}
 
 	// err := godotenv.Load("fpl.env")
@@ -22,7 +22,10 @@ func main() {
 		os.Getenv("user"),
 		)
 
-	port := "8080"
-	log.Println("Running on http://localhost:" + port)
-	a.Run(":" + port)
+	addr, err := determineListenAddress()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Running on " + addr)
+	a.Run(addr)
 }

@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"fmt"
 )
 
 func respondWithError(w http.ResponseWriter, code int, message string) {
@@ -21,3 +23,10 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	}
 }
 
+func determineListenAddress() (string, error) {
+	port := os.Getenv("PORT")
+	if port == "" {
+	  return "", fmt.Errorf("$PORT not set")
+	}
+	return ":" + port, nil
+  }
